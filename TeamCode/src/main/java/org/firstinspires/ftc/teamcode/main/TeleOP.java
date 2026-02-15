@@ -68,8 +68,8 @@ public class TeleOP extends OpMode {
     private int tow_idx=0;
     private Follower follower;
     private DcMotor intake;
-//    private PID shoot_up;
-//    private PID shoot_down;
+    private PID shoot_up;
+    private PID shoot_down;
     private Servo lock;
     private double lock_open_pos = 0.45;
     private double lock_close_pos = 0.65;
@@ -79,9 +79,9 @@ public class TeleOP extends OpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-//        shoot_up.motor= hardwareMap.get(DcMotor.class, "shoot_up");
-//        shoot_up.motor.setDirection(DcMotorSimple.Direction.REVERSE);
-//        shoot_down.motor = hardwareMap.get(DcMotor.class, "shoot_down");
+        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"));
+        shoot_up.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"));
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
         Pose startPose = new Pose(0, 0, Math.toRadians(0));
@@ -121,12 +121,12 @@ public class TeleOP extends OpMode {
         }
         if (gamepad1.x) {
             intake.setPower(1);
-//            shoot_down.setRPM(1000);
-//            shoot_up.setRPM(1000);
+            shoot_down.setRPM(1000);
+            shoot_up.setRPM(1000);
         } else {
             intake.setPower(0);
-//            shoot_down.setRPM(0);
-//            shoot_up.setRPM(0);
+            shoot_down.setRPM(0);
+            shoot_up.setRPM(0);
         }
         if(gamepad1.y){
 
