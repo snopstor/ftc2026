@@ -71,17 +71,16 @@ public class TeleOP extends OpMode {
     private PID shoot_up;
     private PID shoot_down;
     private Servo lock;
-    private double lock_open_pos = 0.45;
-    private double lock_close_pos = 0.65;
+    private double lock_open_pos = 0.4;
+    private double lock_close_pos = 0.6;
 
     @Override
     public void init() {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 0, 1);
-        shoot_up.motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), 1, 0, 1);
+        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 1, 0, 1);
+        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), -1, 1, 0, 1);
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
 
@@ -102,9 +101,9 @@ public class TeleOP extends OpMode {
         double currentHeading = currentPose.getHeading();
 
         follower.setTeleOpDrive(
-                -gamepad1.left_stick_y * 0.1,
-                -gamepad1.left_stick_x * 0.1,
-                -gamepad1.right_stick_x * 0.1,
+                -gamepad1.left_stick_y * 0.4,
+                -gamepad1.left_stick_x * 0.4,
+                -gamepad1.right_stick_x * 0.35,
                 true
         );
 
@@ -125,17 +124,18 @@ public class TeleOP extends OpMode {
             follower.setPose(startPose);
         }
 
-        shoot_down.setRPM(1000);
-        shoot_up.setRPM(1000);
+        shoot_down.setRPM(300);
+        shoot_up.setRPM(300);
 
-        if (gamepad1.x) {
+        if (gamepad1.left_trigger > 0.3) {
             intake.setPower(1);
         } else {
             intake.setPower(0);
         }
-        if(gamepad1.y){
-
+        if(gamepad1.right_trigger > 0.3){
             lock.setPosition(lock_open_pos);
+            wait(200);
+            lock.setPosition(lock_close_pos);
         }
         else lock.setPosition(lock_close_pos);
         telemetry.addData("pos", lock.getPosition());
