@@ -79,13 +79,13 @@ public class TeleOP extends OpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"));
+        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 0, 1);
         shoot_up.motor.setDirection(DcMotorSimple.Direction.REVERSE);
-        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"));
+        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), 1, 0, 1);
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
 
-        Pose startPose = new Pose(ini_coor[rob_idx][0], ini_coor[rob_idx][1], ini_coor[rob_idx][2]);
+        Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
         follower.startTeleopDrive();
@@ -116,22 +116,22 @@ public class TeleOP extends OpMode {
 
         if (gamepad1.leftBumperWasPressed()){
             tow_idx++; tow_idx %= 2;
-            Pose startPose = new Pose(ini_coor[rob_idx][0], ini_coor[rob_idx][1], ini_coor[rob_idx][2]);
+            Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
             follower.setPose(startPose);
         }
         if (gamepad1.rightBumperWasPressed()){
             rob_idx++; rob_idx %= 4;
-            Pose startPose = new Pose(ini_coor[rob_idx][0], ini_coor[rob_idx][1], ini_coor[rob_idx][2]);
+            Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
             follower.setPose(startPose);
         }
+
+        shoot_down.setRPM(1000);
+        shoot_up.setRPM(1000);
+
         if (gamepad1.x) {
             intake.setPower(1);
-            shoot_down.setRPM(1000);
-            shoot_up.setRPM(1000);
         } else {
             intake.setPower(0);
-            shoot_down.setRPM(0);
-            shoot_up.setRPM(0);
         }
         if(gamepad1.y){
 
