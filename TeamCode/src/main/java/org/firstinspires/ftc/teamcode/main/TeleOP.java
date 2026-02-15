@@ -63,6 +63,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 @TeleOp(name="TeleOP", group="Iterative OpMode")
 public class TeleOP extends OpMode {
     private double conv = 2.54 * 1.5;
+    private double[][] ini_coor = {{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}};
+    private int rob_idx=0;
+    private int tow_idx=0;
     private Follower follower;
     private DcMotor intake;
 //    private PID shoot_up;
@@ -107,7 +110,15 @@ public class TeleOP extends OpMode {
         telemetry.addData("X: ", currentX);
         telemetry.addData("Y: ", currentY);
         telemetry.addData("D: ", currentHeading);
+        telemetry.addData("Robot Pos: ", rob_idx);
+        telemetry.addData("Tower Pos: ", tow_idx);
 
+        if (gamepad1.leftBumperWasPressed()){
+            tow_idx++; tow_idx %= 2;
+        }
+        if (gamepad1.rightBumperWasPressed()){
+            rob_idx++; rob_idx %= 4;
+        }
         if (gamepad1.x) {
             intake.setPower(1);
 //            shoot_down.setRPM(1000);
