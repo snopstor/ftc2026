@@ -7,7 +7,8 @@ public class PID {
     public DcMotor motor;
     public PID(DcMotor pid_motor) {
         motor = pid_motor;
-//        DcMotorControllerEx motorControllerEx = (DcMotorControllerEx)
+        DcMotorControllerEx motorControllerEx = (DcMotorControllerEx)motor.getController();
+        
     }
     public void setRPM(int rpm) {
         float power = 0;

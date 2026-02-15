@@ -117,12 +117,12 @@ public class TeleOP extends OpMode {
         if (gamepad1.leftBumperWasPressed()){
             tow_idx++; tow_idx %= 2;
             Pose startPose = new Pose(ini_coor[rob_idx][0], ini_coor[rob_idx][1], ini_coor[rob_idx][2]);
-            follower.setStartingPose(startPose);
+            follower.setPose(startPose);
         }
         if (gamepad1.rightBumperWasPressed()){
             rob_idx++; rob_idx %= 4;
             Pose startPose = new Pose(ini_coor[rob_idx][0], ini_coor[rob_idx][1], ini_coor[rob_idx][2]);
-            follower.setStartingPose(startPose);
+            follower.setPose(startPose);
         }
         if (gamepad1.x) {
             intake.setPower(1);
