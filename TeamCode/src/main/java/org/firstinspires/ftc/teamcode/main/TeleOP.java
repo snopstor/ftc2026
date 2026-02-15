@@ -63,7 +63,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 @TeleOp(name="TeleOP", group="Iterative OpMode")
 public class TeleOP extends OpMode {
     private double conv = 2.54 * 1.5;
-    private double[][] ini_coor = {{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}};
+    private double[][] ini_coor = {{157,49,0},{-119.5, 132, 0.9088},{157,-49,0},{-119.5,-132, -0.9088},{-160, 163,0},{-160, -163,0}};
     private int rob_idx=0;
     private int tow_idx=0;
     private Follower follower;
@@ -84,7 +84,8 @@ public class TeleOP extends OpMode {
         shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"));
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
-        Pose startPose = new Pose(0, 0, Math.toRadians(0));
+
+        Pose startPose = new Pose(ini_coor[rob_idx][0], ini_coor[rob_idx][1], ini_coor[rob_idx][2]);
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
         follower.startTeleopDrive();
@@ -115,9 +116,13 @@ public class TeleOP extends OpMode {
 
         if (gamepad1.leftBumperWasPressed()){
             tow_idx++; tow_idx %= 2;
+            Pose startPose = new Pose(ini_coor[rob_idx][0], ini_coor[rob_idx][1], ini_coor[rob_idx][2]);
+            follower.setStartingPose(startPose);
         }
         if (gamepad1.rightBumperWasPressed()){
             rob_idx++; rob_idx %= 4;
+            Pose startPose = new Pose(ini_coor[rob_idx][0], ini_coor[rob_idx][1], ini_coor[rob_idx][2]);
+            follower.setStartingPose(startPose);
         }
         if (gamepad1.x) {
             intake.setPower(1);
