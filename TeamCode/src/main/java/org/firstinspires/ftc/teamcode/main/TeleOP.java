@@ -134,8 +134,6 @@ public class TeleOP extends OpMode {
         }
         if(gamepad1.right_trigger > 0.3){
             lock.setPosition(lock_open_pos);
-            wait(200);
-            lock.setPosition(lock_close_pos);
         }
         else lock.setPosition(lock_close_pos);
         telemetry.addData("pos", lock.getPosition());
