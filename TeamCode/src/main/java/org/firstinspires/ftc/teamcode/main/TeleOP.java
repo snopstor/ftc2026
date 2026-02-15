@@ -62,7 +62,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @TeleOp(name="TeleOP", group="Iterative OpMode")
 public class TeleOP extends OpMode {
-
+    private double conv = 2.54 * 1.5;
     private Follower follower;
     private DcMotor intake;
 //    private PID shoot_up;
@@ -93,9 +93,9 @@ public class TeleOP extends OpMode {
 
         Pose currentPose = follower.getPose();
 
-        double currentX = currentPose.getX();
-        double currentY = currentPose.getY();
-        double currentHeading = currentPose.getHeading(); // In Radians
+        double currentX = currentPose.getX(); currentX *= conv;
+        double currentY = currentPose.getY(); currentY *= conv;
+        double currentHeading = currentPose.getHeading();
 
         follower.setTeleOpDrive(
                 -gamepad1.left_stick_y,
@@ -117,7 +117,10 @@ public class TeleOP extends OpMode {
 //            shoot_down.setRPM(0);
 //            shoot_up.setRPM(0);
         }
-        if(gamepad1.y) lock.setPosition(lock_open_pos);
+        if(gamepad1.y){
+
+            lock.setPosition(lock_open_pos);
+        }
         else lock.setPosition(lock_close_pos);
         telemetry.addData("pos", lock.getPosition());
     }
