@@ -19,7 +19,7 @@ public class PID {
         motor_controller.setPIDCoefficients(motor_port, DcMotor.RunMode.RUN_USING_ENCODER, pid_coef);
     }
     public void setRPM(int rpm) {
-        float power = 0;
-        
+        float vel = rpm * 6;
+        motor_controller.setMotorVelocity(motor_port, vel, AngleUnit.DEGREES);
     };
 }
