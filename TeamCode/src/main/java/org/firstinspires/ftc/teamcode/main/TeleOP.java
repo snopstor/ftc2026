@@ -44,6 +44,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.pedropathing.follower.Follower;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -80,8 +82,9 @@ public class TeleOP extends OpMode {
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
         Pose startPose = new Pose(0, 0, Math.toRadians(0));
-        follower = createFollower(hardwareMap);
+        follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
+        follower.startTeleopDrive();
     }
 
     @Override
@@ -93,6 +96,13 @@ public class TeleOP extends OpMode {
         double currentX = currentPose.getX();
         double currentY = currentPose.getY();
         double currentHeading = currentPose.getHeading(); // In Radians
+
+        follower.setTeleOpDrive(
+                -gamepad1.left_stick_y,
+                -gamepad1.left_stick_x,
+                -gamepad1.right_stick_x,
+                true
+        );
 
         telemetry.addData("X: ", currentX);
         telemetry.addData("Y: ", currentY);
