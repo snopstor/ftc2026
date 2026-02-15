@@ -57,19 +57,21 @@ import com.qualcomm.robotcore.util.Range;
 public class TeleOP extends OpMode {
 
     private DcMotor intake;
-    private DcMotor shoot_up;
-    private DcMotor shoot_down;
+    private PID shoot_up;
+    private PID shoot_down;
     private Servo lock;
-    private double open_pos = 0.35;
-    private double close_pos = 0.65;
+    private double lock_open_pos = 0.45;
+    private double lock_close_pos = 0.65;
 
     @Override
     public void init() {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        shoot_up = hardwareMap.get(DcMotor.class, "shoot_up");
-        shoot_up.setDirection(DcMotorSimple.Direction.REVERSE);
-        shoot_down = hardwareMap.get(DcMotor.class, "shoot_down");
+
+        shoot_up.motor= hardwareMap.get(DcMotor.class, "shoot_up");
+        shoot_up.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        shoot_down.motor = hardwareMap.get(DcMotor.class, "shoot_down");
+
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
     }
 
@@ -77,15 +79,15 @@ public class TeleOP extends OpMode {
     public void loop() {
         if (gamepad1.x) {
             intake.setPower(1);
-            shoot_down.setPower(1);
-            shoot_up.setPower(1);
+            shoot_down.setRPM(1000);
+            shoot_up.setRPM(1000);
         } else {
             intake.setPower(0);
-            shoot_down.setPower(0);
-            shoot_up.setPower(0);
+            shoot_down.setRPM(0);
+            shoot_up.setRPM(0);
         }
-        if(gamepad1.y) lock.setPosition(open_pos);
-        else lock.setPosition(close_pos);
+        if(gamepad1.y) lock.setPosition(lock_open_pos);
+        else lock.setPosition(lock_close_pos);
         telemetry.addData("pos", lock.getPosition());
     }
 }
