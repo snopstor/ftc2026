@@ -62,7 +62,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 @TeleOp(name="TeleOP", group="Iterative OpMode")
 public class TeleOP extends OpMode {
-    private double conv = 2.54;
+    private double conv = 2.54 * 1.5;
     private Follower follower;
     private DcMotor intake;
 //    private PID shoot_up;
