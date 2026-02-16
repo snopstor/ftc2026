@@ -64,12 +64,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOP", group="Iterative OpMode")
-public class TeleOP extends OpMode {
-    private double conv = 2.54 * 1.5;
-    private double[][] ini_coor = {{157,49,0},{-119.5, 132, 0.9088},{157,-49,0},{-119.5,-132, -0.9088},{-160, 163,0},{-160, -163,0}};
-    private int rob_idx=0;
-    private int tow_idx=0;
+@Autonomous(name="Auto", group="Robot")
+public class Auto extends OpMode {
+    private double conv = 2.51 * 1.5;
     private Follower follower;
     private DcMotor intake;
     private PID shoot_up;
@@ -77,73 +74,40 @@ public class TeleOP extends OpMode {
     private Servo lock;
     private double lock_open_pos = 0.4;
     private double lock_close_pos = 0.6;
-    private int rpm = 280;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void init() {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 1.1, 0, 1.5);
-        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), -1, 1.1, 0, 1.5);
+        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 2, 0, 3);
+        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), -1, 2, 0, 3);
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
 
-        Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
+        Pose startPose = new Pose(0, 0, 0);
         follower = Constants.createFollower(hardwareMap);
+//        for(DcMotor m: follower.get.getMotors)
         follower.setStartingPose(startPose);
         follower.startTeleopDrive();
     }
 
     @Override
+    public void start() {}
+    @Override
     public void loop() {
         follower.update();
 
         Pose currentPose = follower.getPose();
-
         double currentX = currentPose.getX(); currentX *= conv;
         double currentY = currentPose.getY(); currentY *= conv;
         double currentHeading = currentPose.getHeading();
 
-        follower.setTeleOpDrive(
-                -gamepad1.left_stick_y * 0.4,
-                -gamepad1.left_stick_x * 0.4,
-                -gamepad1.right_stick_x * 0.3,
-                true
-        );
+        follower.holdPoint(new Pose(30, 0, 0));
 
         telemetry.addData("X: ", currentX);
         telemetry.addData("Y: ", currentY);
         telemetry.addData("D: ", currentHeading);
-        telemetry.addData("Robot Pos: ", rob_idx);
-        telemetry.addData("Tower Pos: ", tow_idx);
-
-        if (gamepad1.leftBumperWasPressed()){
-            tow_idx++; tow_idx %= 2;
-            Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
-            follower.setPose(startPose);
-        }
-        if (gamepad1.rightBumperWasPressed()){
-            rob_idx++; rob_idx %= 4;
-            Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
-            follower.setPose(startPose);
-        }
-        if (gamepad1.dpadLeftWasPressed()) rpm -= 5;
-        if (gamepad1.dpadRightWasPressed()) rpm += 5;
-
-        shoot_down.setRPM(rpm);
-        shoot_up.setRPM(rpm);
-
-        if (gamepad1.left_trigger > 0.3) {
-            intake.setPower(1);
-        } else {
-            intake.setPower(0);
-        }
-        if(gamepad1.right_trigger > 0.3){
-            lock.setPosition(lock_open_pos);
-        }
-        else lock.setPosition(lock_close_pos);
-        telemetry.addData("pos", lock.getPosition());
-        telemetry.addData("rpm", rpm);
     }
 }
