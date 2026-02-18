@@ -17,15 +17,16 @@ public class PID {
     private double vel;
     public PID(DcMotor pid_motor, float motor_dir, double p, double i, double d, double f) {
         motor = (DcMotorEx)pid_motor;
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         dir = motor_dir / abs(motor_dir);
         motor.setVelocityPIDFCoefficients(p, i, d, f);
     }
-    public void setRPM(int rpm) {
+    public void setRPM(double rpm) {
         vel = rpm * 6 * dir;
         motor.setVelocity(vel, AngleUnit.DEGREES);
     };
     public double getRPM() {
-        vel = motor.getVelocity(AngleUnit.DEGREES);
-        return vel / 6 * dir;
+        return motor.getVelocity(AngleUnit.DEGREES) / 6 * dir;
     }
 }
