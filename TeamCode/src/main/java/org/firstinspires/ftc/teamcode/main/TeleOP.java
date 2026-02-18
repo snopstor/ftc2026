@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -67,13 +68,16 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 @TeleOp(name="TeleOP", group="Iterative OpMode")
 public class TeleOP extends OpMode {
     private double conv = 2.54 * 1.5;
-    private double[][] ini_coor = {{157,49,0},{-119.5, 132, 0.9088},{157,-49,0},{-119.5,-132, -0.9088},{-160, 163,0},{-160, -163,0}};
+    private double[][] ini_coor = {{157,49,0},{-119.5, 132, -0.9088},{157,-49,0},{-119.5,-132, 0.9088},{-160, 163,0},{-160, -163,0}};
     private int rob_idx=0;
     private int tow_idx=0;
     private Follower follower;
     private DcMotor intake;
     private PID shoot_up;
     private PID shoot_down;
+
+    private DcMotorControllerEx motor_down, motor_up;
+
     private Servo lock;
     private double lock_open_pos = 0.29;
     private double lock_close_pos = 0.45;
@@ -87,9 +91,12 @@ public class TeleOP extends OpMode {
         shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 1.1, 0, 1.5);
         shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), -1, 1.1, 0, 1.5);
 
+        motor_down  = (DcMotorControllerEx) shoot_down.motor.getController();
+        motor_up  = (DcMotorControllerEx) shoot_up.motor.getController();
+
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
 
-        Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
+        Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
         follower.startTeleopDrive();
@@ -114,7 +121,9 @@ public class TeleOP extends OpMode {
 
         telemetry.addData("X: ", currentX);
         telemetry.addData("Y: ", currentY);
-        telemetry.addData("D: ", currentHeading);
+        telemetry.addData("Rotation: ", currentHeading);
+        telemetry.addData("Lower shooter speed: ", motor_down.getMotorVelocity(shoot_down.motor_port));
+        telemetry.addData("Upper shooter speed: ", motor_up.getMotorVelocity(shoot_up.motor_port));
 
         String z="";
         if(tow_idx == 0) z="red";
@@ -127,13 +136,12 @@ public class TeleOP extends OpMode {
 
         if (gamepad1.leftBumperWasPressed()){
             tow_idx++; tow_idx %= 2;
-            Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
+            Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
             follower.setPose(startPose);
         }
-        rob_idx += 2 * tow_idx;
         if (gamepad1.rightBumperWasPressed()){
             rob_idx++; rob_idx %= 2;
-            Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
+            Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
             follower.setPose(startPose);
         }
         if (gamepad1.dpadLeftWasPressed()) rpm -= 5;

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class PID {
     public DcMotor motor;
-    private final int motor_port;
+    public final int motor_port;
     private final DcMotorControllerEx motor_controller;
     private final float dir;
     private double vel;
