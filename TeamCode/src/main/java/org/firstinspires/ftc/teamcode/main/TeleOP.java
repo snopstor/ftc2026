@@ -77,7 +77,7 @@ public class TeleOP extends OpMode {
     private Servo lock;
     private double lock_open_pos = 0.29;
     private double lock_close_pos = 0.45;
-    private int rpm = 280;
+    private int rpm = 285;
 
     @Override
     public void init() {
