@@ -69,7 +69,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 @TeleOp(name="TeleOP", group="Iterative OpMode")
 public class TeleOP extends OpMode {
     private double conv = 2.54 * 1.5;
-    private double[][] ini_coor = {{157,49,0},{-119.5, 132, 0.9088},{157,-49,0},{-119.5,-132, -0.9088},{-160, 163,0},{-160, -163,0}};
+    private double[][] ini_coor = {{157,49,0},{-119.5, 132, -0.9088},{157,-49,0},{-119.5,-132, 0.9088},{-160, 163,0},{-160, -163,0}};
     private int rob_idx=0;
     private int tow_idx=0;
     private Follower follower;
