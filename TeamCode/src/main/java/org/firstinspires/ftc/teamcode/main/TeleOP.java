@@ -48,6 +48,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.pedropathing.follower.Follower;
+import static java.lang.Math.abs;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -122,8 +123,9 @@ public class TeleOP extends OpMode {
         telemetry.addData("X: ", currentX);
         telemetry.addData("Y: ", currentY);
         telemetry.addData("Rotation: ", currentHeading);
-        telemetry.addData("Lower shooter speed: ", motor_down.getMotorVelocity(shoot_down.motor_port));
-        telemetry.addData("Upper shooter speed: ", motor_up.getMotorVelocity(shoot_up.motor_port));
+
+        telemetry.addData("Lower shooter speed: ", motor_down.getMotorVelocity(shoot_down.motor_port)/6);
+        telemetry.addData("Upper shooter speed: ", motor_up.getMotorVelocity(shoot_up.motor_port)/6);
 
         String z="";
         if(tow_idx == 0) z="red";
