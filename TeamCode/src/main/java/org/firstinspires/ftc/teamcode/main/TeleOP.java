@@ -106,8 +106,8 @@ public class TeleOP extends OpMode {
         double currentHeading = currentPose.getHeading();
 
         follower.setTeleOpDrive(
-                -gamepad1.left_stick_y * 0.4,
-                -gamepad1.left_stick_x * 0.4,
+                -gamepad1.left_stick_y * 0.6,
+                -gamepad1.left_stick_x * 0.6,
                 -gamepad1.right_stick_x * 0.3,
                 true
         );
