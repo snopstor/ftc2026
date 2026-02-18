@@ -91,7 +91,7 @@ public class TeleOP extends OpMode {
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
 
-        Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
+        Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startPose);
         follower.startTeleopDrive();
@@ -116,9 +116,6 @@ public class TeleOP extends OpMode {
 
         telemetry.addData("X: ", currentX);
         telemetry.addData("Y: ", currentY);
-        telemetry.addData("D: ", currentHeading);
-        telemetry.addData("Robot Pos: ", rob_idx);
-        telemetry.addData("Tower Pos: ", tow_idx);
         telemetry.addData("Rotation: ", currentHeading);
         telemetry.addData("Lower shooter speed: ", shoot_down.getRPM());
         telemetry.addData("Upper shooter speed: ", shoot_up.getRPM());
@@ -134,12 +131,12 @@ public class TeleOP extends OpMode {
 
         if (gamepad1.leftBumperWasPressed()){
             tow_idx++; tow_idx %= 2;
-            Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
+            Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
             follower.setPose(startPose);
         }
         if (gamepad1.rightBumperWasPressed()){
-            rob_idx++; rob_idx %= 4;
-            Pose startPose = new Pose(ini_coor[rob_idx][0] / conv, ini_coor[rob_idx][1] / conv, ini_coor[rob_idx][2]);
+            rob_idx++; rob_idx %= 2;
+            Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
             follower.setPose(startPose);
         }
         if (gamepad1.dpadLeftWasPressed()) rpm -= 5;
