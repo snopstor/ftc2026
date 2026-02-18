@@ -49,6 +49,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.pedropathing.follower.Follower;
 import static java.lang.Math.abs;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 /*
@@ -115,14 +116,12 @@ public class TeleOP extends OpMode {
 
         telemetry.addData("X: ", currentX);
         telemetry.addData("Y: ", currentY);
-<<<<<<< HEAD
         telemetry.addData("D: ", currentHeading);
         telemetry.addData("Robot Pos: ", rob_idx);
         telemetry.addData("Tower Pos: ", tow_idx);
-||||||| SD
         telemetry.addData("Rotation: ", currentHeading);
-        telemetry.addData("Lower shooter speed: ", motor_down.getMotorVelocity(shoot_down.motor_port));
-        telemetry.addData("Upper shooter speed: ", motor_up.getMotorVelocity(shoot_up.motor_port));
+        telemetry.addData("Lower shooter speed: ", shoot_down.getRPM());
+        telemetry.addData("Upper shooter speed: ", shoot_up.getRPM());
 
         String z="";
         if(tow_idx == 0) z="red";
@@ -132,21 +131,6 @@ public class TeleOP extends OpMode {
         if(rob_idx == 0) z="small TRNGL";
         else z="BIG TRNGL";
         telemetry.addData("Position: ", z, " ", rob_idx);
-=======
-        telemetry.addData("Rotation: ", currentHeading);
-
-        telemetry.addData("Lower shooter speed: ", motor_down.getMotorVelocity(shoot_down.motor_port)/6);
-        telemetry.addData("Upper shooter speed: ", motor_up.getMotorVelocity(shoot_up.motor_port)/6);
-
-        String z="";
-        if(tow_idx == 0) z="red";
-        else z="blue";
-
-        telemetry.addData("Alliance: ", z," ", tow_idx );
-        if(rob_idx == 0) z="small TRNGL";
-        else z="BIG TRNGL";
-        telemetry.addData("Position: ", z, " ", rob_idx);
->>>>>>> master
 
         if (gamepad1.leftBumperWasPressed()){
             tow_idx++; tow_idx %= 2;

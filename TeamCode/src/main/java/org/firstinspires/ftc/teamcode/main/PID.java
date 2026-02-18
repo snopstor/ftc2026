@@ -12,16 +12,20 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class PID {
-    public DcMotorEx motor;
+    private DcMotorEx motor;
     private final float dir;
     private double vel;
     public PID(DcMotor pid_motor, float motor_dir, double p, double i, double d, double f) {
         motor = (DcMotorEx)pid_motor;
-        dir = motor_dir;
+        dir = motor_dir / abs(motor_dir);
         motor.setVelocityPIDFCoefficients(p, i, d, f);
     }
     public void setRPM(int rpm) {
-        vel = rpm * 6 * dir / abs(dir);
+        vel = rpm * 6 * dir;
         motor.setVelocity(vel, AngleUnit.DEGREES);
     };
+    public double getRPM() {
+        vel = motor.getVelocity(AngleUnit.DEGREES);
+        return vel / 6 * dir;
+    }
 }
