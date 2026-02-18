@@ -81,8 +81,8 @@ public class Auto extends OpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 2, 0, 3);
-        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), -1, 2, 0, 3);
+        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 1.1, 0, 1.5, 0);
+        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), -1, 1.1, 0, 1.5, 0);
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
 
