@@ -79,17 +79,17 @@ public class TeleOP extends OpMode {
     private Servo lock;
     private double lock_open_pos = 0.29;
     private double lock_close_pos = 0.45;
-    private double rpm = 280;
+    private double rpm = 200;
 
     @Override
     public void init() {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 1.5, 0, 1.5, 0);
-        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), -1, 1.5, 0, 1.5, 0);
+        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), -1, 1.5, 0, 1.5, 0);
+        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), 1, 1.5, 0, 1.5, 0);
 
-        lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
+        lock = hardwareMap.get(Servo.class, "lock");
 
         Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
         follower = Constants.createFollower(hardwareMap);
