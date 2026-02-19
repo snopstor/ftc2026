@@ -129,12 +129,12 @@ public class TeleOP extends OpMode {
         else z="BIG TRNGL";
         telemetry.addData("Position: ", z, " ", rob_idx);
 
-        if (gamepad1.leftBumperWasPressed()){
+        if (gamepad1.leftBumperWasPressed()  && gamepad1.triangleWasPressed()){
             tow_idx++; tow_idx %= 2;
             Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
             follower.setPose(startPose);
         }
-        if (gamepad1.rightBumperWasPressed()){
+        if (gamepad1.rightBumperWasPressed() && gamepad1.triangleWasPressed()){
             rob_idx++; rob_idx %= 2;
             Pose startPose = new Pose(ini_coor[rob_idx+2*tow_idx][0] / conv, ini_coor[rob_idx+2*tow_idx][1] / conv, ini_coor[rob_idx+2*tow_idx][2]);
             follower.setPose(startPose);
