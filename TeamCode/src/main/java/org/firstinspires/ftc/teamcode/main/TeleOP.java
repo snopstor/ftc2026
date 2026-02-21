@@ -81,8 +81,12 @@ public class TeleOP extends OpMode {
     private double lock_close_pos = 0.45;
     private double rpm = 200;
 
+    private int shooting = 0;
+    private long last_time;
+
     @Override
     public void init() {
+        last_time = 0;
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -145,15 +149,35 @@ public class TeleOP extends OpMode {
         shoot_down.setRPM(rpm);
         shoot_up.setRPM(rpm);
 
-        if (gamepad1.left_trigger > 0.3) {
-            intake.setPower(1);
-        } else {
-            intake.setPower(0);
+        if (shooting == 0){
+            if (gamepad1.left_trigger > 0.3) {
+                intake.setPower(1);
+            } else {
+                intake.setPower(0);
+            }
+            if(gamepad1.right_trigger > 0.3){
+                lock.setPosition(lock_open_pos);
+            } else {
+                lock.setPosition(lock_close_pos);
+            }
         }
-        if(gamepad1.right_trigger > 0.3){
-            lock.setPosition(lock_open_pos);
-        }
-        else lock.setPosition(lock_close_pos);
+
+
         telemetry.addData("rpm", rpm);
+
+        if(gamepad1.circleWasPressed() && shooting == 0){
+            intake.setPower(1);
+            lock.setPosition(lock_open_pos);
+            last_time = System.nanoTime();
+            shooting = 1;
+        }
+        if (shooting==1 && System.nanoTime()-last_time > 200L * 1000000){
+            lock.setPosition(lock_close_pos);
+            intake.setPower(0);
+            shooting = 2;
+        }
+        if (shooting==2 && System.nanoTime()-last_time > 400L * 1000000){
+            shooting = 0;
+        }
     }
 }
