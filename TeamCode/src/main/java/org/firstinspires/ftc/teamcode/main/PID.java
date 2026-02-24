@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -15,8 +16,8 @@ public class PID {
     private DcMotorEx motor;
     private final float dir;
     private double vel;
-    public PID(DcMotor pid_motor, float motor_dir, double p, double i, double d, double f) {
-        motor = (DcMotorEx)pid_motor;
+    public PID(HardwareMap hardwareMap, String motor_name, float motor_dir, double p, double i, double d, double f) {
+        motor = hardwareMap.get(DcMotorEx.class, motor_name);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         dir = motor_dir / abs(motor_dir);

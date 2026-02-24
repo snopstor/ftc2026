@@ -90,8 +90,8 @@ public class TeleOP extends OpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), -1, 1.5, 0, 1.5, 0);
-        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), 1, 1.5, 0, 1.5, 0);
+        shoot_up = new PID(hardwareMap, "shoot_up", -1, 1.1, 0, 1.5, 0);
+        shoot_down = new PID(hardwareMap, "shoot_down", 1, 1.1, 0, 1.5, 0);
 
         lock = hardwareMap.get(Servo.class, "lock");
 
@@ -161,7 +161,6 @@ public class TeleOP extends OpMode {
                 lock.setPosition(lock_close_pos);
             }
         }
-
 
         telemetry.addData("rpm", rpm);
 

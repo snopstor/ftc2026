@@ -50,6 +50,9 @@ import com.pedropathing.follower.Follower;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
+import java.util.concurrent.Callable;
+import java.util.function.Function;
+
 /*
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -75,28 +78,27 @@ public class Auto extends OpMode {
     private double lock_open_pos = 0.4;
     private double lock_close_pos = 0.6;
     private ElapsedTime runtime = new ElapsedTime();
-
+    private int shooting = 0;
+    private long last_time;
+    private boolean shoot;
+    private long wait_time;
     @Override
     public void init() {
+        last_time = 0;
         intake = hardwareMap.get(DcMotor.class, "intake");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shoot_up = new PID(hardwareMap.get(DcMotor.class, "shoot_up"), 1, 1.1, 0, 1.5, 0);
-        shoot_down = new PID(hardwareMap.get(DcMotor.class, "shoot_down"), -1, 1.1, 0, 1.5, 0);
+        shoot_up = new PID(hardwareMap, "shoot_up", 1, 1.1, 0, 1.5, 0);
+        shoot_down = new PID(hardwareMap, "shoot_down", -1, 1.1, 0, 1.5, 0);
 
         lock = hardwareMap.get(Servo.class, "lock"); // close 0.65; open 0.45
 
         Pose startPose = new Pose(0, 0, 0);
         follower = Constants.createFollower(hardwareMap);
-//        for(DcMotor m: follower.get.getMotors)
         follower.setStartingPose(startPose);
-        follower.startTeleopDrive();
     }
 
-    @Override
-    public void start() {}
-    @Override
-    public void loop() {
+    private void update() {
         follower.update();
 
         Pose currentPose = follower.getPose();
@@ -104,10 +106,60 @@ public class Auto extends OpMode {
         double currentY = currentPose.getY(); currentY *= conv;
         double currentHeading = currentPose.getHeading();
 
-        follower.holdPoint(new Pose(30, 0, 0));
+        shoot_down.setRPM(180);
+        shoot_up.setRPM(180);
+
+        if(shoot && shooting == 0){
+            intake.setPower(1);
+            lock.setPosition(lock_open_pos);
+            last_time = System.nanoTime();
+            shooting = 1;
+            shoot = false;
+        }
+        if (shooting==1 && System.nanoTime()-last_time > 200L * 1000000){
+            lock.setPosition(lock_close_pos);
+            intake.setPower(0);
+            shooting = 2;
+        }
+        if (shooting==2 && System.nanoTime()-last_time > 400L * 1000000){
+            shooting = 0;
+        }
 
         telemetry.addData("X: ", currentX);
         telemetry.addData("Y: ", currentY);
         telemetry.addData("D: ", currentHeading);
+    }
+    private void wait_nano(long time) {
+        wait_time = System.nanoTime() + time;
+        while(System.nanoTime() < wait_time);
+    }
+    @Override
+    public void start() {
+//        while(follower.isBusy()) {
+//            update();
+//            follower.holdPoint(new Pose(50, 0, 0));
+//        }
+//
+//        update();
+//        shoot = true;
+//        wait_nano(3 * 1000000000L);
+//
+//        update();
+//        shoot = true;
+//        wait_nano(3 * 1000000000L);
+//
+//        update();
+//        shoot = true;
+//        wait_nano(1 * 1000000000L);
+//
+//        while(follower.isBusy()) {
+//            update();
+//            follower.holdPoint(new Pose(150, 0, 0));
+//        }
+    }
+    @Override
+    public void loop() {
+        follower.update();
+        follower.holdPoint(new Pose(50, 0, 0));
     }
 }
